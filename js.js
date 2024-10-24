@@ -1,37 +1,23 @@
 $(document).ready(function () {
-    // URL del feed RSS
-    var feedUrl = "https://www.ansa.it/sito/ansait_rss.xml";
+    // URL del feed RSS convertito in JSON tramite rss2json.com
+    var feedUrl = "https://api.rss2json.com/v1/api.json?rss_url=https://www.ansa.it/sito/ansait_rss.xml";
 
-    // Esegui una richiesta AJAX per ottenere il feed RSS
-    $.ajax({
-        url: feedUrl,
-        method: 'GET',
-        dataType: 'xml',
-        success: function (data) {
-            var $items = $(data).find("item");
-            var $container = $('#news-container');
+    $.get(feedUrl, function (data) {
+        var $container = $('#news-container');
 
-            // Cicla tra gli articoli nel feed
-            $items.each(function () {
-                var $item = $(this);
-                var title = $item.find("title").text();
-                var link = $item.find("link").text();
-                var description = $item.find("description").text();
+        $.each(data.items, function (index, item) {
+            // Crea un elemento HTML per ogni articolo
+            var articleHtml = `
+                <article>
+                    <h2><a href="${item.link}" target="_blank">${item.title}</a></h2>
+                    <p>${item.description}</p>
+                </article>
+            `;
 
-                // Crea un elemento HTML per ogni articolo
-                var articleHtml = `
-                    <article>
-                        <h2><a href="${link}" target="_blank">${title}</a></h2>
-                        <p>${description}</p>
-                    </article>
-                `;
-
-                // Aggiungi l'articolo al container
-                $container.append(articleHtml);
-            });
-        },
-        error: function () {
-            alert('Errore nel caricamento del feed RSS.');
-        }
+            // Aggiungi l'articolo al container
+            $container.append(articleHtml);
+        });
+    }).fail(function () {
+        alert('Errore nel caricamento del feed RSS.');
     });
 });
