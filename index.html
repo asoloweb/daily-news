@@ -3,46 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Feed RSS ANSA</title>
-    <style>
-        body { font-family: Arial, sans-serif; margin: 20px; }
-        h1 { text-align: center; }
-        article { margin-bottom: 20px; }
-        @media print {
-            body { margin: 0; }
-        }
-    </style>
+    <title>Ultime Notizie ANSA</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-<h1>Ultime Notizie ANSA</h1>
+    <h1>Ultime Notizie da ANSA</h1>
+    <div id="news-container"></div>
 
-<div id="news-container"></div>
-
-<script>
-    fetch('https://www.ansa.it/sito/ansait_rss.xml')
-        .then(response => response.text())
-        .then(data => {
-            const parser = new DOMParser();
-            const xml = parser.parseFromString(data, 'text/xml');
-            const items = xml.getElementsByTagName('item');
-            const container = document.getElementById('news-container');
-
-            for (let i = 0; i < items.length; i++) {
-                const title = items[i].getElementsByTagName('title')[0].textContent;
-                const link = items[i].getElementsByTagName('link')[0].textContent;
-                const description = items[i].getElementsByTagName('description')[0].textContent;
-                
-                const article = document.createElement('article');
-                article.innerHTML = `
-                    <h2><a href="${link}" target="_blank">${title}</a></h2>
-                    <p>${description}</p>
-                `;
-                container.appendChild(article);
-            }
-        })
-        .catch(error => console.error('Errore nel caricamento del feed:', error));
-</script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="script.js"></script>
 
 </body>
 </html>
